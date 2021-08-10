@@ -1,0 +1,74 @@
+{
+	"name": "LeetCodeJava",
+	"displayName": "LeetCodeJava",
+	"description": "local run and debug leetcode code based on java",
+	"version": "0.9.0",
+	"engines": {
+		"vscode": "^1.59.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"onCommand:LeetCodeJava.start"
+	],
+	"main": "./src/extension.js",
+	"contributes": {
+		"commands": [
+			{
+				"command": "LeetCodeJava.start",
+				"title": "run LeetCodeJava extension"
+			}
+		],
+		"keybindings": [
+			{
+				"command": "LeetCodeJava.createFile",
+				"title": "create the code file",
+				"key": "ctrl+alt+Q"
+			},
+			{
+				"command": "LeetCodeJava.compileAndRun",
+				"title":"run the method with input",
+				"key": "ctrl+alt+R"
+			}
+		],
+		"configuration": {
+			"type": "object",
+			"title": "TypeScript configuration",
+			"properties": {
+				"LeetCodeJava.dir": {
+					"type": [
+						"string",
+						"null"
+					],
+					"default": "like D:\\test",
+					"description": "选择生成文件的绝对地址"
+				},
+				"LeetCodeJava.jar": {
+					"type": [
+						"string",
+						"null"
+					],
+					"default": "like D:\\test",
+					"description": "jar包绝对地址，github中获取"
+				}
+			}
+		}
+	},
+	"scripts": {
+		"lint": "eslint .",
+		"pretest": "npm run lint",
+		"test": "node ./test/runTest.js"
+	},
+	"devDependencies": {
+		"@types/vscode": "^1.59.0",
+		"@types/glob": "^7.1.3",
+		"@types/mocha": "^8.0.4",
+		"@types/node": "^12.11.7",
+		"eslint": "^7.19.0",
+		"glob": "^7.1.6",
+		"mocha": "^8.2.1",
+		"typescript": "^4.1.3",
+		"vscode-test": "^1.5.0"
+	}
+}
