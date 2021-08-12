@@ -26,7 +26,6 @@ leetcode.txt中的数据从上到下为
 快捷键ctrl+alt+Q会生成文件名合法化的代码框架
 快捷键ctrl+alt+R能够将当前文件中的方法调用测试参数运行，并打印输出结果
 
-### TODO
 ### For more information
 
 * [github地址](https://github.com/xuwww/LeetCodeJava)
