@@ -1,65 +1,35 @@
 # LeetCodeJava README
 
-This is the README for your extension "LeetCodeJava". After writing up a brief description, we recommend including the following sections.
-
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
-
-For example if there is an image subfolder under your extension project workspace:
-
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+对于使用leetcode等刷题网站时遇到的不方便调试以及批量测试的问题而开发的小插件，能够通过编写txt文件实现自动创建类文件和代码框架，并且完成代码后能够通过快捷键自动调用当前方法并测试txt文件中的测试参数输出结果
 
 ## Requirements
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+需要环境变量中的JAVA_HOME的配置以及1.8以上的jdk版本
 
 ## Extension Settings
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+使用插件是首先需要使用快捷键 "ctrl+p"，输入LeetCodeJava.start来启动插件
 
-For example:
+第一次使用需要在用户设置中配置两个参数LeetCodeJava.dir和LeetCodeJava.jar，通过设置中搜索可以找到
 
-This extension contributes the following settings:
+分别是使用者期望文件生成的绝对路径以及jar包存放的绝对路径(不含文件名)，后续使用参数代指地址
 
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
+当前版本较低，实现的功能比较简单，需要在LeetCodeJava.dir下手动建立leetcode.txt文件，以及从github上下载resource下的jar包。
 
-## Known Issues
+leetcode.txt中的数据从上到下为
++ 用户希望创建的文件/类名( 如 Two Sum
++ 方法名( 如 public String solution(String[] s) {
++ 需要测试的参数(如 ["123","234","1234"])
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+快捷键ctrl+alt+Q会生成文件名合法化的代码框架
+快捷键ctrl+alt+R能够将当前文件中的方法调用测试参数运行，并打印输出结果
 
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
------------------------------------------------------------------------------------------------------------
-
-## Working with Markdown
-
-**Note:** You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+CMD+V` on macOS or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux) or `Cmd+Space` (macOS) to see a list of Markdown snippets
-
+### TODO
 ### For more information
 
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
+* [github地址](https://github.com/xuwww/LeetCodeJava)
+* 邮箱地址:x1466267601@outlook.com
 
 **Enjoy!**

@@ -3,6 +3,7 @@
 	"displayName": "LeetCodeJava",
 	"description": "local run and debug leetcode code based on java",
 	"version": "0.9.0",
+	"publisher": "zheng",
 	"engines": {
 		"vscode": "^1.59.0"
 	},
