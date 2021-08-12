@@ -28,6 +28,7 @@ leetcode.txt中的数据从上到下为
 
 ### TODO
 简化配置方式
+增加参数传入方式
 ### For more information
 
 * [github地址](https://github.com/xuwww/LeetCodeJava)
