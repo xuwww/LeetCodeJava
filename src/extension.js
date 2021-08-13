@@ -32,8 +32,8 @@ function activate(context) {
 				console.log(error);
 				return false;
 			}
-			console.log(path.join(leetcodePath,"./leetcode.txt"));
-			vscode.window.showInformationMessage("创建leetcode文件成功！");
+			console.log();
+			vscode.window.showInformationMessage("创建leetcode文件:" + path.join(leetcodePath,"./leetcode.txt"));
 		})
 	}));
 
