@@ -12,6 +12,11 @@ function activate(context) {
 
 	let channel = vscode.window.createOutputChannel('LeetCodeJava');
 
+	/**
+	 * 使用java代码实现 //TODO 使用js实现
+	 * 调用leetcode.txt文件中的各项参数//TODO 弹窗输入 
+	 * 完成后不跳转 // TODO 完成以后跳转
+	 */
 	context.subscriptions.push(vscode.commands.registerCommand('LeetCodeJava.createFile', function () {
 		channel.clear();
 		channel.show();
@@ -28,10 +33,16 @@ function activate(context) {
 			} else if (stdout) {
 				console.log(stdout);
 				channel.appendLine(stdout);
+
 			}
 		});
 	}));
 
+	/**
+	 * 编译当前文件
+	 * 运行当前中唯一函数 //TODO 获取光标所在函数
+	 * 调用参数为leetcode.txt中 //TODO 弹窗形式输入
+	 */
 	context.subscriptions.push(vscode.commands.registerCommand('LeetCodeJava.compileAndRun', function () {
 		channel.clear();
 		channel.show();
@@ -47,18 +58,9 @@ function activate(context) {
 			return;
 		}
 		let compileCmd = 'javac -encoding utf8 "' + fullFileName + '"';
-		exec(compileCmd, function (error, stdout, stderr) {
-			if (stderr) {
-				console.log(stderr);
-				channel.appendLine(stderr);
-			} else if (stdout) {
-				console.log(stdout);
-				channel.appendLine(stdout);
-			}
-		});
 		let runCmd = "java -cp " + "\"" + leetcodePath + ";" + jarPath + "\\" + jarName + "\" Main " + leetcodePath;
-		console.log(runCmd);
-		exec(runCmd, function (error, stdout, stderr) {
+		console.log(compileCmd + "; " + runCmd);
+		exec(compileCmd + " && " + runCmd, function (error, stdout, stderr) {
 			if (stderr) {
 				console.log(stderr);
 				channel.appendLine(stderr);
