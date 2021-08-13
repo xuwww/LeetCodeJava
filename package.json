@@ -19,6 +19,10 @@
 			{
 				"command": "LeetCodeJava.start",
 				"title": "run LeetCodeJava extension"
+			},
+			{
+				"command": "LeetCodeJava.init",
+				"title":"First Use LeetCodeJava"
 			}
 		],
 		"keybindings": [
@@ -42,16 +46,8 @@
 						"string",
 						"null"
 					],
-					"default": "like D:\\test",
-					"description": "选择生成文件的绝对地址"
-				},
-				"LeetCodeJava.jar": {
-					"type": [
-						"string",
-						"null"
-					],
-					"default": "like D:\\test",
-					"description": "jar包绝对地址，github中获取"
+					"default": "the first workspaceFolder",
+					"description": "选择生成文件的绝对地址,like D:\\test"
 				}
 			}
 		}
