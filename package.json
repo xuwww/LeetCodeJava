@@ -2,7 +2,7 @@
 	"name": "LeetCodeJava",
 	"displayName": "LeetCodeJava",
 	"description": "local run and debug leetcode code based on java",
-	"version": "0.9.0",
+	"version": "0.10.0",
 	"publisher": "zheng",
 	"engines": {
 		"vscode": "^1.59.0"
@@ -22,7 +22,7 @@
 			},
 			{
 				"command": "LeetCodeJava.init",
-				"title":"First Use LeetCodeJava"
+				"title": "First Use LeetCodeJava"
 			}
 		],
 		"keybindings": [
@@ -33,7 +33,7 @@
 			},
 			{
 				"command": "LeetCodeJava.compileAndRun",
-				"title":"run the method with input",
+				"title": "run the method with input",
 				"key": "ctrl+alt+R"
 			}
 		],
