@@ -4,7 +4,7 @@ const vscode = require('vscode');
 const fs = require('fs');
 
 function activate(context) {
-	let jarName = "leetcodeJava-1.1.jar";
+	let jarName = "leetcodeJava-1.3.jar";
 
 	console.log('active');
 	vscode.commands.registerCommand('LeetCodeJava.start', function () {
@@ -228,18 +228,61 @@ function activate(context) {
 			}
 			channel.show(true);
 			channel.appendLine("测试变量: " + inputParamter);
-			compileAndRunMain(inputParamter);
+			compile((/** @type {string} */ className) => {
+				let exdir = path.join(leetcodePath, ".\\classes");
+				let commandParam = "compileAndRunDefault";
+				let parameter = "\"" + commandParam + "\"" + " " + "\"" + className + "\"";
+				for (let i of inputParamter) {
+					//特殊字符修改
+					parameter += " \"" + i.replace(/\\/g, "\\\\").replace(/"/g, '\\"') + "\"";
+					console.log(i);
+				}
+				let runCmd = "java -cp " + "\"" + exdir + ";" + jarPath + "\\" + jarName + "\" Main " + parameter;
+				let exec = require('child_process').exec;
+				console.log(runCmd);
+				exec(runCmd, function (error, stdout, stderr) {
+					if (stderr) {
+						console.log(stderr);
+						channel.appendLine(stderr);
+					} else if (stdout) {
+						console.log(stdout);
+						channel.appendLine(stdout);
+					}
+				});
+			});
 		})
 	}));
 
+	/**
+	 * leetcode.txt文件作为参数,批量执行
+	 * java实现部分 1. 通过main输入命令名称，类名和txt路径
+	 * 				2.执行类中唯一方法，不唯一则执行第一个方法
+	 */
 	context.subscriptions.push(vscode.commands.registerCommand('LeetCodeJava.compileAndRunTXT', function () {
-		return;
+		compile((className) => {
+			let commandParam = "compileAndRunTXT";
+			let exdir = path.join(leetcodePath, ".\\classes");
+			let parameter = "\"" + commandParam + "\"" + " " + "\"" + className + "\"" + " " + "\"" + leetcodePath + "\"";
+			let runCmd = "java -cp " + "\"" + exdir + ";" + jarPath + "\\" + jarName + "\" Main " + parameter;
+			let exec = require('child_process').exec;
+			console.log(runCmd);
+			exec(runCmd, function (error, stdout, stderr) {
+				if (stderr) {
+					console.log(stderr);
+					channel.appendLine(stderr);
+				} else if (stdout) {
+					console.log(stdout);
+					channel.appendLine(stdout);
+					
+				}
+			});
+		});
 	}));
 
 	/**
-	 * @param {string[]} parameters
+	 * @param {{ (className: any): void; (className: any): void; (arg0: string): void; }} callback
 	 */
-	function compileAndRunMain(parameters) {
+	function compile(callback) {
 		let editor = vscode.window.activeTextEditor;
 		let fullFileName = editor.document.fileName;
 		let exdir = path.join(leetcodePath, ".\\classes");
@@ -250,15 +293,7 @@ function activate(context) {
 			return;
 		}
 		let compileCmd = 'javac -encoding utf8 "' + fullFileName + '"' + " -d \"" + exdir + "\"";
-		let commanParam = "compileAndRunDefault";
 		let className = path.basename(fullFileName, ".java").replace(/[^0-9a-zA-Z_]+/g, "_");
-		let parameter = "\"" + commanParam + "\"" + " " + "\"" + className + "\"";
-		for (let i of parameters) {
-			//特殊字符修改
-			parameter += " \"" + i.replace(/\\/g, "\\\\").replace(/"/g, '\\"') + "\"";
-			console.log(i);
-		}
-		let runCmd = "java -cp " + "\"" + exdir + ";" + jarPath + "\\" + jarName + "\" Main " + parameter;
 		let exec = require('child_process').exec;
 		console.log(compileCmd);
 		exec(compileCmd, function (error, stdout, stderr) {
@@ -271,19 +306,11 @@ function activate(context) {
 				channel.appendLine(stdout);
 			}
 			if (!error) {
-				console.log(runCmd);
-				exec(runCmd, function (error, stdout, stderr) {
-					if (stderr) {
-						console.log(stderr);
-						channel.appendLine(stderr);
-					} else if (stdout) {
-						console.log(stdout);
-						channel.appendLine(stdout);
-					}
-				});
+				callback(className);
 			}
 		});
 	}
+
 }
 
 function deactivate() {
