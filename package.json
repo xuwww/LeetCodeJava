@@ -2,7 +2,7 @@
 	"name": "LeetCodeJava",
 	"displayName": "LeetCodeJava",
 	"description": "local run and debug leetcode code based on java",
-	"version": "0.11.0",
+	"version": "1.0.0",
 	"publisher": "zheng",
 	"repository": {
 		"github": "https://gitee.com/xuwww/leetcode-java",
