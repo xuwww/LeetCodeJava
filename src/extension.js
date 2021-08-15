@@ -47,9 +47,6 @@ function activate(context) {
 	 * TODO valueSelection
 	 */
 	context.subscriptions.push(vscode.commands.registerCommand('LeetCodeJava.createFile', function () {
-		channel.clear();
-		//TODO 修改
-		channel.show(true);
 		if (!leetcodePath || leetcodePath == "the first workspaceFolder") {
 			vscode.window.showWarningMessage("parameter LeetCodeJava.dir is default, not recommend!")
 			let folders = vscode.workspace.workspaceFolders.map(item => item.uri.path);
@@ -59,10 +56,9 @@ function activate(context) {
 			ignoreFocusOut: true,
 			placeHolder: "输入生成文件名,如\"1. Two Sum\"",
 		}).then((title) => {
-			//TODO reverse
-			// if(title){
-			// 	return;
-			// }
+			if(title){
+				return;
+			}
 			vscode.window.showInputBox({
 				ignoreFocusOut: true,
 				placeHolder: "输入返回类型和方法名,类似\"public int[] twoSum(int[] nums, int target) {\"",
@@ -73,6 +69,9 @@ function activate(context) {
 					return undefined;
 				}
 			}).then((methodString) => {
+				if(!methodString){
+					return;
+				}
 				createFile(title, methodString, (filePath) => {
 					vscode.workspace.openTextDocument(filePath)
 						.then(doc => {
@@ -140,7 +139,6 @@ function activate(context) {
 	 * ExtensionContext.workspaceState：键值对组成的工作区数据。当同一个工作区再次打开时会重新取出数据。
 	 */
 	context.subscriptions.push(vscode.commands.registerCommand('LeetCodeJava.createFiles', function () {
-		channel.clear();
 		channel.show(true);
 		let exec = require('child_process').exec;
 		// let jarPath = vscode.workspace.getConfiguration().get("LeetCodeJava.jar");
@@ -239,11 +237,15 @@ function activate(context) {
 			channel.appendLine("测试变量: " + inputParamter);
 			compileAndRunMain(inputParamter);
 		})
-		//.then((parameter) => {
-
-		// });
 	}));
 
+	context.subscriptions.push(vscode.commands.registerCommand('LeetCodeJava.compileAndRunDefault', function () {
+
+	};
+
+	/**
+	 * @param {string[]} parameters
+	 */
 	function compileAndRunMain(parameters) {
 		let editor = vscode.window.activeTextEditor;
 		let fullFileName = editor.document.fileName;
@@ -267,6 +269,7 @@ function activate(context) {
 		let exec = require('child_process').exec;
 		console.log(compileCmd);
 		exec(compileCmd, function (error, stdout, stderr) {
+			channel.show(true);
 			if (stderr) {
 				console.log(stderr);
 				channel.appendLine(stderr);
