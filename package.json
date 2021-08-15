@@ -4,6 +4,10 @@
 	"description": "local run and debug leetcode code based on java",
 	"version": "0.11.0",
 	"publisher": "zheng",
+	"repository": {
+		"github": "https://gitee.com/xuwww/leetcode-java",
+		"gitee": "https://gitee.com/xuwww/leetcode-java"
+	},
 	"engines": {
 		"vscode": "^1.59.0"
 	},
@@ -11,7 +15,8 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:LeetCodeJava.start"
+		"onCommand:LeetCodeJava.start",
+		"onLanguage:java"
 	],
 	"main": "./src/extension.js",
 	"contributes": {
@@ -38,7 +43,7 @@
 			},
 			{
 				"command": "LeetCodeJava.compileAndRunTXT",
-				"title":"run the method witt leetcode.txt",
+				"title": "run the method witt leetcode.txt",
 				"key": "ctrl+alt+T"
 			}
 		],
