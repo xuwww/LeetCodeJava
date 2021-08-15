@@ -32,9 +32,14 @@
 				"key": "ctrl+alt+Q"
 			},
 			{
-				"command": "LeetCodeJava.compileAndRun",
+				"command": "LeetCodeJava.compileAndRunDefault",
 				"title": "run the method with input",
 				"key": "ctrl+alt+R"
+			},
+			{
+				"command": "LeetCodeJava.compileAndRunTXT",
+				"title":"run the method witt leetcode.txt",
+				"key": "ctrl+alt+T"
 			}
 		],
 		"configuration": {
