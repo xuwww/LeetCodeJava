@@ -13,7 +13,7 @@ function activate(context) {
 
 	let channel = vscode.window.createOutputChannel('LeetCodeJava');
 	let jarPath = path.join(__dirname + "./resource");
-	let leetcodePath = vscode.workspace.getConfiguration().get("LeetCodeJava.dir");
+	
 	/**
 	 * 初始化文件配置 
 	 * 生成leetcode.txt
@@ -22,6 +22,7 @@ function activate(context) {
 	 */
 	context.subscriptions.push(vscode.commands.registerCommand('LeetCodeJava.init', function () {
 		//判断是否配置
+		let leetcodePath = vscode.workspace.getConfiguration().get("LeetCodeJava.dir");
 		if (!leetcodePath || leetcodePath == "the first workspaceFolder" || leetcodePath == "null") {
 			vscode.window.showWarningMessage("parameter LeetCodeJava.dir is default, not recommend!")
 			let folders = vscode.workspace.workspaceFolders.map(item => item.uri.path);
@@ -46,6 +47,7 @@ function activate(context) {
 	 * TODO valueSelection
 	 */
 	context.subscriptions.push(vscode.commands.registerCommand('LeetCodeJava.createFile', function () {
+		let leetcodePath = vscode.workspace.getConfiguration().get("LeetCodeJava.dir");
 		if (!leetcodePath || leetcodePath == "the first workspaceFolder") {
 			vscode.window.showWarningMessage("parameter LeetCodeJava.dir is default, not recommend!")
 			let folders = vscode.workspace.workspaceFolders.map(item => item.uri.path);
@@ -101,6 +103,7 @@ function activate(context) {
 	//TODO error处理
 	//TODO Thenable<T>
 	function createFile(title, methodString, then) {
+		let leetcodePath = vscode.workspace.getConfiguration().get("LeetCodeJava.dir");
 		channel.show(true);
 		title = "T" + title.trim().replace(/(\s|\.|\\|"|')+/g, "_");
 		let fileName = title + ".java";
@@ -229,6 +232,7 @@ function activate(context) {
 			channel.show(true);
 			channel.appendLine("测试变量: " + inputParamter);
 			compile((/** @type {string} */ className) => {
+				let leetcodePath = vscode.workspace.getConfiguration().get("LeetCodeJava.dir");
 				let exdir = path.join(leetcodePath, ".\\classes");
 				let commandParam = "compileAndRunDefault";
 				let parameter = "\"" + commandParam + "\"" + " " + "\"" + className + "\"";
@@ -261,6 +265,7 @@ function activate(context) {
 	context.subscriptions.push(vscode.commands.registerCommand('LeetCodeJava.compileAndRunTXT', function () {
 		compile((className) => {
 			let commandParam = "compileAndRunTXT";
+			let leetcodePath = vscode.workspace.getConfiguration().get("LeetCodeJava.dir");
 			let exdir = path.join(leetcodePath, ".\\classes");
 			let parameter = "\"" + commandParam + "\"" + " " + "\"" + className + "\"" + " " + "\"" + leetcodePath + "\"";
 			let runCmd = "java -cp " + "\"" + exdir + ";" + jarPath + "\\" + jarName + "\" Main " + parameter;
@@ -285,6 +290,7 @@ function activate(context) {
 	function compile(callback) {
 		let editor = vscode.window.activeTextEditor;
 		let fullFileName = editor.document.fileName;
+		let leetcodePath = vscode.workspace.getConfiguration().get("LeetCodeJava.dir");
 		let exdir = path.join(leetcodePath, ".\\classes");
 		if (!editor || !fullFileName) {
 			return;
