@@ -4,6 +4,7 @@
 	"description": "local run and debug leetcode code based on java",
 	"version": "1.0.1",
 	"publisher": "zheng",
+	"icon":"images/icon.jpg",
 	"repository": {
 		"github": "https://gitee.com/xuwww/leetcode-java",
 		"gitee": "https://gitee.com/xuwww/leetcode-java"
