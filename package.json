@@ -2,7 +2,7 @@
 	"name": "LeetCodeJava",
 	"displayName": "LeetCodeJava",
 	"description": "local run and debug leetcode code based on java",
-	"version": "1.0.8",
+	"version": "1.0.9",
 	"publisher": "zheng",
 	"icon": "images/icon.png",
 	"repository": {
