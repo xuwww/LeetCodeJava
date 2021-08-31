@@ -1,4 +1,3 @@
-
 const path = require('path');
 const vscode = require('vscode');
 const fs = require('fs');
@@ -7,13 +6,15 @@ function activate(context) {
 	let jarName = "leetcodeJava-1.3.jar";
 
 	console.log('active');
-	vscode.commands.registerCommand('LeetCodeJava.start', function () {
+
+	context.subscriptions.push(vscode.commands.registerCommand('LeetCodeJava.start', function () {
 		vscode.window.showInformationMessage('run LeetCodeJava extension success');
-	});
+	}));
+
 
 	let channel = vscode.window.createOutputChannel('LeetCodeJava');
 	let jarPath = path.join(__dirname + "./resource");
-	
+
 	/**
 	 * 初始化文件配置 
 	 * 生成leetcode.txt
@@ -22,12 +23,7 @@ function activate(context) {
 	 */
 	context.subscriptions.push(vscode.commands.registerCommand('LeetCodeJava.init', function () {
 		//判断是否配置
-		let leetcodePath = vscode.workspace.getConfiguration().get("LeetCodeJava.dir");
-		if (!leetcodePath || leetcodePath == "the first workspaceFolder" || leetcodePath == "null") {
-			vscode.window.showWarningMessage("parameter LeetCodeJava.dir is default, not recommend!")
-			let folders = vscode.workspace.workspaceFolders.map(item => item.uri.path);
-			leetcodePath = folders[0];
-		}
+		let leetcodePath = getLeetCodePath();
 		fs.writeFile(path.join(leetcodePath, "./leetcode.txt"), '', 'utf-8', (error) => {
 			if (error) {
 				console.log(error);
@@ -47,12 +43,7 @@ function activate(context) {
 	 * TODO valueSelection
 	 */
 	context.subscriptions.push(vscode.commands.registerCommand('LeetCodeJava.createFile', function () {
-		let leetcodePath = vscode.workspace.getConfiguration().get("LeetCodeJava.dir");
-		if (!leetcodePath || leetcodePath == "the first workspaceFolder") {
-			vscode.window.showWarningMessage("parameter LeetCodeJava.dir is default, not recommend!")
-			let folders = vscode.workspace.workspaceFolders.map(item => item.uri.path);
-			leetcodePath = folders[0];
-		}
+		let leetcodePath = getLeetCodePath();
 		vscode.window.showInputBox({
 			ignoreFocusOut: true,
 			placeHolder: "输入生成文件名,如\"1. Two Sum\"",
@@ -73,7 +64,7 @@ function activate(context) {
 				if (!methodString) {
 					return;
 				}
-				createFile(title, methodString, (filePath) => {
+				createFile(title, methodString, leetcodePath, (filePath) => {
 					vscode.workspace.openTextDocument(filePath)
 						.then(doc => {
 							// 在VSCode编辑窗口展示读取到的文本
@@ -84,26 +75,11 @@ function activate(context) {
 				});
 			})
 		});
-		// let exec = require('child_process').exec;
-		// let cmd = "java -cp " + jarPath + "\\" + jarName + " leetcode.autoCreate.CreateLeetcodeFile " + leetcodePath;
-		// vscode.window.setStatusBarMessage('Execute command: ' + cmd);
-		// console.log(cmd);
-		// exec(cmd, function (error, stdout, stderr) {
-		// 	if (stderr) {
-		// 		console.log(stderr);
-		// 		channel.appendLine(stderr);
-		// 	} else if (stdout) {
-		// 		console.log(stdout);
-		// 		channel.appendLine(stdout);
-
-		// 	}
-		// });
 	}));
 
 	//TODO error处理
 	//TODO Thenable<T>
-	function createFile(title, methodString, then) {
-		let leetcodePath = vscode.workspace.getConfiguration().get("LeetCodeJava.dir");
+	function createFile(title, methodString, leetcodePath, then) {
 		channel.show(true);
 		title = "T" + title.trim().replace(/(\s|\.|\\|"|')+/g, "_");
 		let fileName = title + ".java";
@@ -126,42 +102,13 @@ function activate(context) {
 		fs.writeFile(filePath, content, 'utf-8', (error) => {
 			if (error) {
 				console.log(error);
+				channel.appendLine("创建leetcode文件失败:" + filePath)
 				return false;
 			}
 			channel.appendLine("创建leetcode文件: " + filePath);
 			then(filePath);
 		})
 	}
-
-	/**
-	 * 使用java代码实现
-	 * 调用leetcode.txt文件中的各项参数 
-	 * TODO txt文件用于批量生成
-	 * 完成后不跳转 
-	 * ExtensionContext.globalState：键值对组成的全局数据。当插件激活时会再次取出这些数据。
-	 * ExtensionContext.workspaceState：键值对组成的工作区数据。当同一个工作区再次打开时会重新取出数据。
-	 */
-	// context.subscriptions.push(vscode.commands.registerCommand('LeetCodeJava.createFiles', function () {
-	// 	channel.show(true);
-	// 	let exec = require('child_process').exec;
-	// 	if (!leetcodePath || leetcodePath == "the first workspaceFolder") {
-	// 		vscode.window.showWarningMessage("parameter LeetCodeJava.dir is default, not recommend!")
-	// 		let folders = vscode.workspace.workspaceFolders.map(item => item.uri.path);
-	// 		leetcodePath = folders[0];
-	// 	}
-	// 	let cmd = "java -cp " + jarPath + "\\" + jarName + " leetcode.autoCreate.CreateLeetcodeFile " + leetcodePath;
-	// 	vscode.window.setStatusBarMessage('Execute command: ' + cmd);
-	// 	console.log(cmd);
-	// 	exec(cmd, function (error, stdout, stderr) {
-	// 		if (stderr) {
-	// 			console.log(stderr);
-	// 			channel.appendLine(stderr);
-	// 		} else if (stdout) {
-	// 			console.log(stdout);
-	// 			channel.appendLine(stdout);
-	// 		}
-	// 	});
-	// }));
 
 	let preValue;
 	/**
@@ -175,6 +122,7 @@ function activate(context) {
 	 * 2. 执行类中唯一方法，不唯一则执行第一个方法
 	 */
 	context.subscriptions.push(vscode.commands.registerCommand('LeetCodeJava.compileAndRunDefault', function () {
+		let leetcodePath = getLeetCodePath();
 		vscode.window.showInputBox({
 			ignoreFocusOut: true,
 			placeHolder: "输入测试用例, 规则同leetcode, 以空格拆分",
@@ -231,8 +179,7 @@ function activate(context) {
 			}
 			channel.show(true);
 			channel.appendLine("测试变量: " + inputParamter);
-			compile((/** @type {string} */ className) => {
-				let leetcodePath = vscode.workspace.getConfiguration().get("LeetCodeJava.dir");
+			compile(leetcodePath, (/** @type {string} */ className) => {
 				let exdir = path.join(leetcodePath, ".\\classes");
 				let commandParam = "compileAndRunDefault";
 				let parameter = "\"" + commandParam + "\"" + " " + "\"" + className + "\"";
@@ -263,9 +210,10 @@ function activate(context) {
 	 * 				2.执行类中唯一方法，不唯一则执行第一个方法
 	 */
 	context.subscriptions.push(vscode.commands.registerCommand('LeetCodeJava.compileAndRunTXT', function () {
-		compile((className) => {
+		let leetcodePath = getLeetCodePath();
+		compile(leetcodePath, (className) => {
 			let commandParam = "compileAndRunTXT";
-			let leetcodePath = vscode.workspace.getConfiguration().get("LeetCodeJava.dir");
+			let leetcodePath = getLeetCodePath();
 			let exdir = path.join(leetcodePath, ".\\classes");
 			let parameter = "\"" + commandParam + "\"" + " " + "\"" + className + "\"" + " " + "\"" + leetcodePath + "\"";
 			let runCmd = "java -cp " + "\"" + exdir + ";" + jarPath + "\\" + jarName + "\" Main " + parameter;
@@ -278,19 +226,29 @@ function activate(context) {
 				} else if (stdout) {
 					console.log(stdout);
 					channel.appendLine(stdout);
-					
+
 				}
 			});
 		});
 	}));
 
+	function getLeetCodePath() {
+		let leetcodePath = vscode.workspace.getConfiguration().get("LeetCodeJava.dir");
+		if (!leetcodePath || leetcodePath == "the first workspaceFolder" || leetcodePath == "null") {
+			vscode.window.showWarningMessage("parameter LeetCodeJava.dir is default, not recommend!")
+			let folders = vscode.workspace.workspaceFolders.map(item => item.uri.path);
+			console.log(folders);
+			leetcodePath = folders[0].substr(1);
+		}
+		return leetcodePath;
+	}
+
 	/**
 	 * @param {{ (className: any): void; (className: any): void; (arg0: string): void; }} callback
 	 */
-	function compile(callback) {
+	function compile(leetcodePath, callback) {
 		let editor = vscode.window.activeTextEditor;
 		let fullFileName = editor.document.fileName;
-		let leetcodePath = vscode.workspace.getConfiguration().get("LeetCodeJava.dir");
 		let exdir = path.join(leetcodePath, ".\\classes");
 		if (!editor || !fullFileName) {
 			return;

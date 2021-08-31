@@ -16,8 +16,7 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:LeetCodeJava.start",
-		"onLanguage:java"
+		"onCommand:LeetCodeJava.start"
 	],
 	"main": "./src/extension.js",
 	"contributes": {
