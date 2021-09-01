@@ -1,6 +1,9 @@
 const path = require('path');
 const vscode = require('vscode');
 const fs = require('fs');
+const { getLeetCodePath } = require('./leetcodePath');
+const { compile } = require('./compile');
+const {createFile} = require('./createFile');
 
 function activate(context) {
 	let jarName = "leetcodeJava-1.3.jar";
@@ -64,7 +67,7 @@ function activate(context) {
 				if (!methodString) {
 					return;
 				}
-				createFile(title, methodString, leetcodePath, (filePath) => {
+				createFile(title, methodString, leetcodePath, channel, (filePath) => {
 					vscode.workspace.openTextDocument(filePath)
 						.then(doc => {
 							// 在VSCode编辑窗口展示读取到的文本
@@ -76,39 +79,6 @@ function activate(context) {
 			})
 		});
 	}));
-
-	//TODO error处理
-	//TODO Thenable<T>
-	function createFile(title, methodString, leetcodePath, then) {
-		channel.show(true);
-		title = "T" + title.trim().replace(/(\s|\.|\\|"|')+/g, "_");
-		let fileName = title + ".java";
-		let className = title.replace(/[^0-9a-zA-Z_]+/g, "_");
-		//提取methodName中第一个合理的方法和返回类型
-		let methodBracket = methodString.match(/\(.*?\)/);
-		methodString = methodString.slice(0, methodBracket["index"]);
-		let blank = methodString.match(/\s\w*$/);
-		let methodName = methodString.slice(blank["index"] + 1, methodBracket["index"]) + methodBracket[0];
-		methodString = methodString.slice(0, blank["index"]);
-		blank = methodString.match(/\s\w*$/);
-		if (!blank) {
-			blank = { "index": -1 };
-		}
-		let returnType = methodString.slice(blank["index"] + 1, methodString.length);
-		//TODO 已有文件处理
-		//写入内容
-		let content = "import java.util.*;\n\nclass " + className + " {\n\tpublic static " + returnType + " " + methodName + "{" + "\n\t\t\n\t}\n}";
-		let filePath = path.join(leetcodePath, "./" + fileName);
-		fs.writeFile(filePath, content, 'utf-8', (error) => {
-			if (error) {
-				console.log(error);
-				channel.appendLine("创建leetcode文件失败:" + filePath)
-				return false;
-			}
-			channel.appendLine("创建leetcode文件: " + filePath);
-			then(filePath);
-		})
-	}
 
 	let preValue;
 	/**
@@ -179,7 +149,7 @@ function activate(context) {
 			}
 			channel.show(true);
 			channel.appendLine("测试变量: " + inputParamter);
-			compile(leetcodePath, (/** @type {string} */ className) => {
+			compile(leetcodePath, channel, (/** @type {string} */ className) => {
 				let exdir = path.join(leetcodePath, ".\\classes");
 				let commandParam = "compileAndRunDefault";
 				let parameter = "\"" + commandParam + "\"" + " " + "\"" + className + "\"";
@@ -211,7 +181,7 @@ function activate(context) {
 	 */
 	context.subscriptions.push(vscode.commands.registerCommand('LeetCodeJava.compileAndRunTXT', function () {
 		let leetcodePath = getLeetCodePath();
-		compile(leetcodePath, (className) => {
+		compile(leetcodePath, channel, (className) => {
 			let commandParam = "compileAndRunTXT";
 			let leetcodePath = getLeetCodePath();
 			let exdir = path.join(leetcodePath, ".\\classes");
@@ -232,48 +202,7 @@ function activate(context) {
 		});
 	}));
 
-	function getLeetCodePath() {
-		let leetcodePath = vscode.workspace.getConfiguration().get("LeetCodeJava.dir");
-		if (!leetcodePath || leetcodePath == "the first workspaceFolder" || leetcodePath == "null") {
-			vscode.window.showWarningMessage("parameter LeetCodeJava.dir is default, not recommend!")
-			let folders = vscode.workspace.workspaceFolders.map(item => item.uri.path);
-			console.log(folders);
-			leetcodePath = folders[0].substr(1);
-		}
-		return leetcodePath;
-	}
 
-	/**
-	 * @param {{ (className: any): void; (className: any): void; (arg0: string): void; }} callback
-	 */
-	function compile(leetcodePath, callback) {
-		let editor = vscode.window.activeTextEditor;
-		let fullFileName = editor.document.fileName;
-		let exdir = path.join(leetcodePath, ".\\classes");
-		if (!editor || !fullFileName) {
-			return;
-		}
-		if (!fullFileName.endsWith('.java')) {
-			return;
-		}
-		let compileCmd = 'javac -encoding utf8 "' + fullFileName + '"' + " -d \"" + exdir + "\"";
-		let className = path.basename(fullFileName, ".java").replace(/[^0-9a-zA-Z_]+/g, "_");
-		let exec = require('child_process').exec;
-		console.log(compileCmd);
-		exec(compileCmd, function (error, stdout, stderr) {
-			channel.show(true);
-			if (stderr) {
-				console.log(stderr);
-				channel.appendLine(stderr);
-			} else if (stdout) {
-				console.log(stdout);
-				channel.appendLine(stdout);
-			}
-			if (!error) {
-				callback(className);
-			}
-		});
-	}
 
 }
 
