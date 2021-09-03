@@ -3,7 +3,8 @@ const vscode = require('vscode');
 const fs = require('fs');
 const { getLeetCodePath } = require('./leetcodePath');
 const { compile } = require('./compile');
-const {createFile} = require('./createFile');
+const { createFile } = require('./createFile');
+const { decodeGBK } = require('./decodeGBK');
 
 function activate(context) {
 	let jarName = "leetcodeJava-1.3.jar";
@@ -156,18 +157,23 @@ function activate(context) {
 				for (let i of inputParamter) {
 					//特殊字符修改
 					parameter += " \"" + i.replace(/\\/g, "\\\\").replace(/"/g, '\\"') + "\"";
-					console.log(i);
+					// console.log(i);
 				}
 				let runCmd = "java -cp " + "\"" + exdir + ";" + jarPath + "\\" + jarName + "\" Main " + parameter;
 				let exec = require('child_process').exec;
 				console.log(runCmd);
-				exec(runCmd, function (error, stdout, stderr) {
+				exec(runCmd, { encoding: "binaryEncoding" }, function (error, stdout, stderr) {
 					if (stderr) {
-						console.log(stderr);
-						channel.appendLine(stderr);
-					} else if (stdout) {
-						console.log(stdout);
-						channel.appendLine(stdout);
+						console.log(decodeGBK(stderr));
+						channel.appendLine(decodeGBK(stderr));
+					}
+					if (stdout) {
+						console.log(decodeGBK(stdout));
+						channel.appendLine(decodeGBK(stdout));
+					}
+					if (error) {
+						console.log(decodeGBK(error));
+						channel.appendLine(decodeGBK(error));
 					}
 				});
 			});
@@ -191,12 +197,16 @@ function activate(context) {
 			console.log(runCmd);
 			exec(runCmd, function (error, stdout, stderr) {
 				if (stderr) {
-					console.log(stderr);
-					channel.appendLine(stderr);
-				} else if (stdout) {
-					console.log(stdout);
-					channel.appendLine(stdout);
-
+					console.log(decodeGBK(stderr));
+					channel.appendLine(decodeGBK(stderr));
+				}
+				if (stdout) {
+					console.log(decodeGBK(stdout));
+					channel.appendLine(decodeGBK(stdout));
+				}
+				if (error) {
+					console.log(decodeGBK(error));
+					channel.appendLine(decodeGBK(error));
 				}
 			});
 		});
