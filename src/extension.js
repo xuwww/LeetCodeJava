@@ -17,6 +17,7 @@ function activate(context) {
 
 
 	let channel = vscode.window.createOutputChannel('LeetCodeJava');
+	channel.show(true);
 	let jarPath = path.join(__dirname + "./resource");
 
 	/**
@@ -74,6 +75,7 @@ function activate(context) {
 							// 在VSCode编辑窗口展示读取到的文本
 							vscode.window.showTextDocument(doc);
 						}, err => {
+							channel.appendLine(`Open ${filePath} error, ${err}.`);
 							console.log(`Open ${filePath} error, ${err}.`);
 						})
 				});
@@ -148,7 +150,6 @@ function activate(context) {
 			if (preInd != parameter.length) {
 				inputParamter.push(parameter.slice(preInd, parameter.length));
 			}
-			channel.show(true);
 			channel.appendLine("测试变量: " + inputParamter);
 			compile(leetcodePath, channel, (/** @type {string} */ className) => {
 				let exdir = path.join(leetcodePath, ".\\classes");

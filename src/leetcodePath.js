@@ -5,7 +5,6 @@ exports.getLeetCodePath = function(){
 		if (!leetcodePath || leetcodePath == "the first workspaceFolder" || leetcodePath == "null") {
 			vscode.window.showWarningMessage("parameter LeetCodeJava.dir is default, not recommend!")
 			let folders = vscode.workspace.workspaceFolders.map(item => item.uri.path);
-			console.log(folders);
 			leetcodePath = folders[0].substr(1);
 		}
 		return leetcodePath;

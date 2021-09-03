@@ -4,7 +4,6 @@ const fs = require('fs');
 //TODO error处理
 //TODO Thenable<T>
 exports.createFile = function(/** @type {string} */ title, /** @type {string} */ methodString, /** @type {string} */ leetcodePath, /** @type {{ show: (arg0: boolean) => void; appendLine: (arg0: string) => void; }} */ channel, /** @type {(arg0: string) => void} */ then) {
-    channel.show(true);
     title = "T" + title.trim().replace(/(\s|\.|\\|"|')+/g, "_");
     let fileName = title + ".java";
     let className = title.replace(/[^0-9a-zA-Z_]+/g, "_");
@@ -16,6 +15,7 @@ exports.createFile = function(/** @type {string} */ title, /** @type {string} */
     methodString = methodString.slice(0, blank["index"]);
     blank = methodString.match(/\s\w*$/);
     if (!blank) {
+        blank = [];
         blank["index"] = -1;
     }
     let returnType = methodString.slice(blank["index"] + 1, methodString.length);
@@ -26,7 +26,8 @@ exports.createFile = function(/** @type {string} */ title, /** @type {string} */
     fs.writeFile(filePath, content, 'utf-8', (error) => {
         if (error) {
             console.log(error);
-            channel.appendLine("创建leetcode文件失败:" + filePath)
+            channel.appendLine(error.toString());
+            channel.appendLine("创建leetcode文件失败:" + filePath);
             return false;
         }
         channel.appendLine("创建leetcode文件: " + filePath);
