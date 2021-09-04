@@ -20,11 +20,11 @@ exports.compile = function (leetcodePath, channel, callback) {
     let exec = require('child_process').exec;
     console.log(compileCmd);
     exec(compileCmd, { encoding: "binaryEncoding" },  function (error, stdout, stderr) {
-        if (stderr) {
+        if (stderr&&stderr.length!=0) {
             console.log(decodeGBK(stderr));
             channel.appendLine(decodeGBK(stderr));
         } 
-        if (stdout) {
+        if (stdout&&stdout.length!=0) {
             channel.appendLine(decodeGBK(stdout));
         }
         if (!error) {

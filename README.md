@@ -10,7 +10,7 @@
 
 ## Requirements
 
-需要环境变量中的JAVA_HOME的配置以及1.8以上的jdk版本
+需要环境变量中的JAVA_HOME的配置以及1.8及以上的jdk版本
 
 ## Extension Settings
 
@@ -41,6 +41,7 @@
 + 用例输入以空格隔开，格式参考leetcode中格式，数组使用[]
 + 支持TreeNode和ListNode，但需要引入leetcode.TreeNode和leetcode.ListNode，建议自己实现
 + 如果发现有什么bug，或者想实现对于c、c艹、python、golong等语言支持，都可以联系我
++ 最后感谢@雪梦帮我画的logo
 
 ### TODO
 1. 完善对于各种少数不支持场景的功能，如：多线程，流程题目，循环链表等
@@ -55,5 +56,6 @@
 * [gitee地址](https://gitee.com/xuwww/leetcode-java)
 * 邮箱地址: x1466267601@outlook.com
 * qq : 1466267601
+
 
 **Enjoy!**

@@ -48,6 +48,7 @@ function activate(context) {
 	 * TODO valueSelection
 	 */
 	context.subscriptions.push(vscode.commands.registerCommand('LeetCodeJava.createFile', function () {
+		channel.clear();	
 		let leetcodePath = getLeetCodePath();
 		vscode.window.showInputBox({
 			ignoreFocusOut: true,
@@ -95,6 +96,7 @@ function activate(context) {
 	 * 2. 执行类中唯一方法，不唯一则执行第一个方法
 	 */
 	context.subscriptions.push(vscode.commands.registerCommand('LeetCodeJava.compileAndRunDefault', function () {
+		channel.clear();
 		let leetcodePath = getLeetCodePath();
 		vscode.window.showInputBox({
 			ignoreFocusOut: true,
@@ -164,11 +166,11 @@ function activate(context) {
 				let exec = require('child_process').exec;
 				console.log(runCmd);
 				exec(runCmd, { encoding: "binaryEncoding" }, function (error, stdout, stderr) {
-					if (stderr) {
+					if (stderr&&stderr.length!=0) {
 						console.log(decodeGBK(stderr));
 						channel.appendLine(decodeGBK(stderr));
 					}
-					if (stdout) {
+					if (stdout&&stdout.length!=0) {
 						console.log(decodeGBK(stdout));
 						channel.appendLine(decodeGBK(stdout));
 					}
@@ -187,6 +189,7 @@ function activate(context) {
 	 * 				2.执行类中唯一方法，不唯一则执行第一个方法
 	 */
 	context.subscriptions.push(vscode.commands.registerCommand('LeetCodeJava.compileAndRunTXT', function () {
+		channel.clear();
 		let leetcodePath = getLeetCodePath();
 		compile(leetcodePath, channel, (className) => {
 			let commandParam = "compileAndRunTXT";
@@ -197,11 +200,11 @@ function activate(context) {
 			let exec = require('child_process').exec;
 			console.log(runCmd);
 			exec(runCmd, function (error, stdout, stderr) {
-				if (stderr) {
+				if (stderr||stderr.length!=0) {
 					console.log(decodeGBK(stderr));
 					channel.appendLine(decodeGBK(stderr));
 				}
-				if (stdout) {
+				if (stdout||stdout.length!=0) {
 					console.log(decodeGBK(stdout));
 					channel.appendLine(decodeGBK(stdout));
 				}
