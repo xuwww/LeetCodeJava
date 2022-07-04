@@ -5,14 +5,23 @@ const { getLeetCodePath } = require('./leetcodePath');
 const { compile } = require('./compile');
 const { createFile } = require('./createFile');
 const { decodeGBK } = require('./decodeGBK');
+const i18n = require('i18n')
 
 function activate(context) {
 	let jarName = "leetcodeJava-1.3.jar";
 
-	console.log('active');
+	i18n.configure({
+		locales: ['zh-cn', 'en'],
+		directory: path.join(__dirname, 'locales')
+	})
+	
+	i18n.setLocale(vscode.env.language);
 
+	console.log(i18n.__('active'));
+
+	//'run LeetCodeJava extension success'
 	context.subscriptions.push(vscode.commands.registerCommand('LeetCodeJava.start', function () {
-		vscode.window.showInformationMessage('run LeetCodeJava extension success');
+		vscode.window.showInformationMessage(i18n.__('start_success'));
 	}));
 
 
@@ -34,7 +43,8 @@ function activate(context) {
 				console.log(error);
 				return false;
 			}
-			vscode.window.showInformationMessage("创建leetcode文件:" + path.join(leetcodePath, "./leetcode.txt"));
+			//"创建leetcode文件:"
+			vscode.window.showInformationMessage(i18n.__('create') + path.join(leetcodePath, "./leetcode.txt"));
 		})
 	}));
 
@@ -50,19 +60,22 @@ function activate(context) {
 	context.subscriptions.push(vscode.commands.registerCommand('LeetCodeJava.createFile', function () {
 		channel.clear();	
 		let leetcodePath = getLeetCodePath();
+		//输入生成文件名,如\"1. Two Sum\"
 		vscode.window.showInputBox({
 			ignoreFocusOut: true,
-			placeHolder: "输入生成文件名,如\"1. Two Sum\"",
+			placeHolder: i18n.__('inputFileName'),
 		}).then((title) => {
 			if (!title) {
 				return;
 			}
+			//"输入返回类型和方法名,类似\"public int[] twoSum(int[] nums, int target) {\""
 			vscode.window.showInputBox({
 				ignoreFocusOut: true,
-				placeHolder: "输入返回类型和方法名,类似\"public int[] twoSum(int[] nums, int target) {\"",
+				placeHolder: i18n.__('input method name'),
 				validateInput: (input) => {
+					//"不包含方法"
 					if (!/\(.*?\)/.test(input)) {
-						return "不包含方法";
+						return i18n.__("not contain method error");
 					}
 					return undefined;
 				}
@@ -75,7 +88,7 @@ function activate(context) {
 						.then(doc => {
 							// 在VSCode编辑窗口展示读取到的文本
 							vscode.window.showTextDocument(doc);
-						}, err => {
+						}, err => { 
 							channel.appendLine(`Open ${filePath} error, ${err}.`);
 							console.log(`Open ${filePath} error, ${err}.`);
 						})
@@ -100,10 +113,12 @@ function activate(context) {
 		let leetcodePath = getLeetCodePath();
 		vscode.window.showInputBox({
 			ignoreFocusOut: true,
-			placeHolder: "输入测试用例, 规则同leetcode, 以空格拆分",
+			//"输入测试用例, 规则同leetcode, 以空格拆分"
+			placeHolder: i18n.__('input test case'),
 			value: preValue,
 			valueSelection: (preValue ? [0, preValue.length] : undefined),
-			prompt: "复杂多个输入建议采用leetcode.txt文件输入参数",
+			//"复杂多个输入建议采用leetcode.txt文件输入参数"
+			prompt: i18n.__('advice for muiltiple input'),
 			validateInput: (input) => {
 				let braket = 0;
 				let quot = 0;
@@ -119,10 +134,12 @@ function activate(context) {
 					}
 				}
 				if (braket != 0) {
-					return "括号匹配失败,检查一下或者试试leetcode.txt"
+					//"括号匹配失败,检查一下或者试试leetcode.txt"
+					return i18n.__("bracket error")
 				}
 				if (quot != 0) {
-					return "引号匹配失败,检查一下或者试试leetcode.txt"
+					//"引号匹配失败,检查一下或者试试leetcode.txt"
+					return i18n.__("Quotation marks error")
 				}
 				return undefined;
 			}
@@ -152,7 +169,8 @@ function activate(context) {
 			if (preInd != parameter.length) {
 				inputParamter.push(parameter.slice(preInd, parameter.length));
 			}
-			channel.appendLine("测试变量: " + inputParamter);
+			//"测试变量: "
+			channel.appendLine(i18n.__('output test variable') + inputParamter);
 			compile(leetcodePath, channel, (/** @type {string} */ className) => {
 				let exdir = path.join(leetcodePath, ".\\classes");
 				let commandParam = "compileAndRunDefault";

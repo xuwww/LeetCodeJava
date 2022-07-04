@@ -1,0 +1,14 @@
+{
+    "Hello": "雷猴",
+    "active": "启动成功",
+    "start_success": "运行插件LeetCodeJava成功",
+    "create": "创建leetcode文件:",
+    "inputFileName": "输入生成文件名,如\"1. Two Sum\"",
+    "input method name": "输入返回类型和方法名,类似\"public int[] twoSum(int[] nums, int target) {\"",
+    "not contain method error": "不包含方法",
+    "input test case": "输入测试用例, 规则同leetcode, 以空格拆分",
+    "advice for muiltiple input": "复杂多个输入建议采用leetcode.txt文件输入参数",
+    "bracket error": "括号匹配失败,检查一下或者试试leetcode.txt",
+    "Quotation marks error": "引号匹配失败,检查一下或者试试leetcode.txt",
+    "output test variable": "测试变量: "
+}

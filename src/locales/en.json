@@ -1,0 +1,14 @@
+{
+    "Hello": "Hello",
+    "active": "active",
+    "start_success": "run LeetCodeJava extension success",
+    "create": "create Leetcode director",
+    "inputFileName": "the name of java file , such as \"1. Two Sum\"",
+    "input method name": "the return type and method name,类似\"public int[] twoSum(int[] nums, int target) {\"",
+    "not contain method error": "there is no method",
+    "input test case": "test case, same as cases in leetcode, split each with space",
+    "advice for muiltiple input": "multiple or complex inputs, try using leetcode.txt to enter the parameters",
+    "bracket error": "Bracket match failed, check it or try leetcode.txt",
+    "Quotation marks error": "Quotation mark match failed, check it or try leetcode.txt",
+    "output test variable": "testing cases: "
+}
